@@ -260,7 +260,10 @@
     <div class="result-container" id="result-container">
       <h2>Parabéns!</h2>
       <p id="score-text"></p>
-      <button class="btn-restart" id="btn-restart">Reiniciar Quiz</button>
+      <div style="display:flex;gap:12px;justify-content:center;margin-top:12px;flex-wrap:wrap;">
+        <button class="btn-restart" id="btn-restart">Reiniciar Quiz</button>
+        <a id="btn-encerrar" class="btn-next" href="encerramento.html" style="text-decoration:none;display:inline-flex;align-items:center;justify-content:center;">Encerrar</a>
+      </div>
     </div>
   </div>
 
@@ -435,6 +438,8 @@
       criarProgress();
       mostrarPergunta();
     });
+
+    // O link 'Encerrar' já aponta para 'encerramento.html'. Se preferir redirecionamento automático, posso alterar.
 
     // Gerar QR code apontando para a URL atual
     const qrImg = document.getElementById('qr-img');
