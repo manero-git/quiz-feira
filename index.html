@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz EMEB Constancio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Be Vietnam Pro', sans-serif;
+    }
+
+    body {
+      width: 100%;
+      min-height: 100vh;
+      background-image: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url('./download.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow-x: hidden;
+    }
+
+    #quiz-container {
+      width: 90%;
+      max-width: 800px;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(8px);
+      border-radius: 15px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+      overflow: hidden;
+      position: relative;
+      border: 2px solid rgba(255,255,255,0.5);
+    }
+
+    header {
+      text-align: center;
+      padding: 30px 15px;
+      position: relative;
+      color: white;
+      background: linear-gradient(135deg, #006400 0%, #004d00 100%);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+
+    header h1 {
+      font-size: 2.2rem;
+      margin-bottom: 5px;
+      text-shadow: 0 0 10px black;
+    }
+
+    header p {
+      opacity: 0.9;
+      text-shadow: 0 0 10px black;
+    }
+
+    .qr-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 15px 20px;
+      background: rgba(255, 255, 255, 0.9);
+    }
+
+    .qr-container img {
+      width: 120px;
+      height: 120px;
+      border-radius: 8px;
+    }
+
+    .qr-text {
+      font-size: 0.95rem;
+      color: #333;
+    }
+
+    .qr-text small {
+      font-size: 0.85rem;
+      color: #555;
+      display: block;
+      margin-top: 8px;
+    }
+
+    .progress-container {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 20px;
+      background: rgba(255,255,255,0.6);
+    }
+
+    .progress-step {
+      flex: 1;
+      height: 8px;
+      background: rgba(0,0,0,0.1);
+      margin: 0 5px;
+      border-radius: 4px;
+      transition: all 0.3s;
+      position: relative;
+    }
+
+    .progress-step.active {
+      background: #32cd32;
+    }
+
+    .question-container {
+      padding: 30px 20px;
+      min-height: 250px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.5s ease;
+    }
+
+    .question-text {
+      font-size: 1.4rem;
+      margin-bottom: 25px;
+      color: #333;
+    }
+
+    ul.answers {
+      list-style: none;
+    }
+
+    ul.answers li {
+      margin-bottom: 15px;
+      transition: transform 0.2s;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    ul.answers li:hover {
+      transform: scale(1.02);
+    }
+
+    ul.answers input {
+      display: none;
+    }
+
+    ul.answers label {
+      display: flex;
+      align-items: center;
+      padding: 12px 18px;
+      border-radius: 8px;
+      background: #f2f2f2;
+      cursor: pointer;
+      border: 2px solid transparent;
+      font-size: 1rem;
+      transition: all 0.3s;
+    }
+
+    ul.answers input:checked + label {
+      background: #00c6ff;
+      color: white;
+      border-color: #0072ff;
+    }
+
+    ul.answers li.correto label {
+      background-color: #28a745 !important;
+      color: white;
+      border-color: #1e7e34 !important;
+    }
+
+    ul.answers li.errado label {
+      background-color: #dc3545 !important;
+      color: white;
+      border-color: #a71d2a !important;
+    }
+
+    .btn-next {
+      margin-top: 25px;
+      align-self: flex-end;
+      background: #0072ff;
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .btn-next:hover {
+      background: #00c6ff;
+    }
+
+    .result-container {
+      padding: 30px 20px;
+      text-align: center;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      animation: fadeIn 0.5s ease forwards;
+    }
+
+    .result-container h2 {
+      font-size: 2rem;
+      color: #32cd32;
+      margin-bottom: 15px;
+    }
+
+    .result-container p {
+      font-size: 1.2rem;
+      margin-bottom: 25px;
+    }
+
+    .btn-restart {
+      background: #ff4b5c;
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .btn-restart:hover {
+      background: #ff6b81;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+
+    @keyframes shake {
+      0% { transform: translateX(0);}
+      25% { transform: translateX(-5px);}
+      50% { transform: translateX(5px);}
+      75% { transform: translateX(-5px);}
+      100% { transform: translateX(0);}
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="quiz-container">
+    <header>
+      <h1>Quiz EMEB Constancio</h1>
+      <p>Responda todas as perguntas para testar seus conhecimentos!</p>
+    </header>
+
+    <div class="qr-container">
+      <img id="qr-img" alt="QR Code do Quiz" src="" />
+      <div class="qr-text">
+        Escaneie para abrir esta página no seu dispositivo.<br/>
+        <small>• Observação: alguns celulares não abrem URLs file:// por segurança.</small>
+      </div>
+    </div>
+
+    <div class="progress-container" id="progress"></div>
+    <div class="question-container" id="question-container"></div>
+
+    <div class="result-container" id="result-container">
+      <h2>Parabéns!</h2>
+      <p id="score-text"></p>
+      <button class="btn-restart" id="btn-restart">Reiniciar Quiz</button>
+    </div>
+  </div>
+
+  <script>
+    const perguntas = [
+      {
+        pergunta: "Onde nasceu o Sr. Constâncio:",
+        respostas: [
+          "Santo Antônio do Aracanguá",
+          "Barra da Guarita",
+          "Jaicós - PI",
+          "Auriflama"
+        ],
+        correta: 2
+      },
+      {
+        pergunta: "Complete a frase: \"Dia 20 de Novembro é comemorado a Consciência _?\"",
+        respostas: [
+          "Preta",
+          "Branca",
+          "Negra",
+          "Amarela"
+        ],
+        correta: 2
+      },
+      {
+        pergunta: "Qual o feriado foi evidenciado na sala de Língua Inglesa. Em que mês ele acontece?",
+        respostas: [
+          "Halloween - October",
+          "Valentin's Day - February",
+          "Merry's Christmas - December",
+          "Thanksgiving - November"
+        ],
+        correta: 3
+      },
+      {
+        pergunta: "Qual é o nome da técnica de arte indígena brasileira que utiliza fibras vegetais para trançar objetos?",
+        respostas: [
+          "Cerâmica",
+          "Cestaria",
+          "Pintura",
+          "Escultura"
+        ],
+        correta: 1
+      },
+      {
+        pergunta: "Qual é o personagem infantil mais conhecido do escritor Ziraldo?",
+        respostas: [
+          "Cebolinha",
+          "Chico Bento",
+          "Menino Maluquinho",
+          "Êmilia"
+        ],
+        correta: 2
+      },
+      {
+        pergunta: "Qual foi o tema que mais chamou sua atenção na sala de Ciências?",
+        respostas: [
+          "Agricultura",
+          "Pecuária",
+          "Foguetes",
+          "Circuitos",
+          "Reação Química"
+        ],
+        correta: 0
+      }
+    ];
+
+    const questionContainer = document.getElementById('question-container');
+    const progressContainer = document.getElementById('progress');
+    const resultContainer = document.getElementById('result-container');
+    const scoreText = document.getElementById('score-text');
+    const btnRestart = document.getElementById('btn-restart');
+
+    let currentQuestion = 0;
+    let score = 0;
+
+    function criarProgress() {
+      progressContainer.innerHTML = '';
+      for (let i = 0; i < perguntas.length; i++) {
+        const step = document.createElement('div');
+        step.classList.add('progress-step');
+        step.dataset.step = i + 1;
+        if (i === currentQuestion) step.classList.add('active');
+        progressContainer.appendChild(step);
+      }
+    }
+
+    function mostrarPergunta() {
+      questionContainer.innerHTML = '';
+      const q = perguntas[currentQuestion];
+
+      const perguntaEl = document.createElement('h2');
+      perguntaEl.classList.add('question-text');
+      perguntaEl.textContent = q.pergunta;
+      questionContainer.appendChild(perguntaEl);
+
+      const ul = document.createElement('ul');
+      ul.classList.add('answers');
+
+      q.respostas.forEach((resposta, index) => {
+        const li = document.createElement('li');
+        const input = document.createElement('input');
+        input.type = 'radio';
+        input.name = 'resposta';
+        input.id = 'resposta' + index;
+        input.value = index;
+
+        const label = document.createElement('label');
+        label.setAttribute('for', 'resposta' + index);
+        label.textContent = resposta;
+
+        li.appendChild(input);
+        li.appendChild(label);
+        ul.appendChild(li);
+      });
+
+      questionContainer.appendChild(ul);
+
+      const btnNext = document.createElement('button');
+      btnNext.classList.add('btn-next');
+      btnNext.textContent = currentQuestion === perguntas.length - 1 ? 'Finalizar' : 'Próxima';
+      questionContainer.appendChild(btnNext);
+
+      btnNext.addEventListener('click', () => {
+        const selecionado = document.querySelector('input[name="resposta"]:checked');
+        if (!selecionado) {
+          questionContainer.style.animation = 'shake 0.5s';
+          setTimeout(() => { questionContainer.style.animation = ''; }, 500);
+          return;
+        }
+
+        const todosLi = document.querySelectorAll('ul.answers li');
+        const isAllCorrectQuestion = currentQuestion === 5;
+
+        if (isAllCorrectQuestion) {
+          todosLi.forEach((li) => li.classList.add('correto'));
+          score++;
+        } else {
+          todosLi.forEach((li, i) => {
+            if (i === q.correta) li.classList.add('correto');
+            if (parseInt(selecionado.value) === i && i !== q.correta) li.classList.add('errado');
+          });
+          if (parseInt(selecionado.value) === q.correta) score++;
+        }
+
+        setTimeout(() => {
+          currentQuestion++;
+          if (currentQuestion < perguntas.length) {
+            criarProgress();
+            mostrarPergunta();
+          } else {
+            mostrarResultado();
+          }
+        }, 800);
+      });
+    }
+
+    function mostrarResultado() {
+      questionContainer.style.display = 'none';
+      progressContainer.style.display = 'none';
+      resultContainer.style.display = 'flex';
+      scoreText.textContent = `Você acertou ${score} de ${perguntas.length} perguntas.`;
+    }
+
+    btnRestart.addEventListener('click', () => {
+      currentQuestion = 0;
+      score = 0;
+      questionContainer.style.display = 'flex';
+      progressContainer.style.display = 'flex';
+      resultContainer.style.display = 'none';
+      criarProgress();
+      mostrarPergunta();
+    });
+
+    // Gerar QR code apontando para a URL atual
+    const qrImg = document.getElementById('qr-img');
+    if (qrImg) {
+      const encoded = encodeURIComponent(location.href);
+      qrImg.src = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + encoded;
+    }
+
+    criarProgress();
+    mostrarPergunta();
+  </script>
+
+</body>
+</html>
